@@ -11,8 +11,6 @@ ADamageItem::ADamageItem()
 
 void ADamageItem::OnInteract(ACharacter* Character)
 {
-	Super::OnInteract(Character);
-
 	if (!Character) return;
 
 	UGameplayStatics::ApplyDamage(
