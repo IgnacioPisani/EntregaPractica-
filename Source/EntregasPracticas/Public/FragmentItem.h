@@ -3,10 +3,7 @@
 #include "CoreMinimal.h"
 #include "ItemBase.h"
 #include "FragmentItem.generated.h"
-
-class AFragmentItem;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnFragmentItemCollected, AFragmentItem*, Item, FName, FragmentID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFragmentCollected, FName, FragmentID);
 
 UCLASS()
 class ENTREGASPRACTICAS_API AFragmentItem : public AItemBase
@@ -22,8 +19,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fragmento")
 	FText FragmentName;
 
-	UPROPERTY(BlueprintAssignable, Category = "Eventos")
-	FOnFragmentItemCollected OnFragmentItemCollected;
+	UPROPERTY(BlueprintAssignable)
+	FOnFragmentCollected OnFragmentCollected;
 
 protected:
 	virtual void OnInteract(ACharacter* Character) override;

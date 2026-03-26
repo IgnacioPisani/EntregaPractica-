@@ -24,8 +24,8 @@ void AFragmentItem::OnInteract(ACharacter* Character)
 	}
  
 	FragComp->AddFragment(FragmentID);
- 
-	OnFragmentItemCollected.Broadcast(this, FragmentID);
+
+	OnFragmentCollected.Broadcast(FragmentID);
 	
 	UE_LOG(LogTemp, Log, TEXT("[FragmentItem] Fragmento '%s' recolectado."), *FragmentID.ToString());
 	DestroyItem();

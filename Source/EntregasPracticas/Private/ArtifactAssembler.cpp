@@ -47,7 +47,7 @@ void AArtifactAssembler::BeginPlay()
     {
         if (AFragmentItem* Item = Cast<AFragmentItem>(Actor))
         {
-            Item->OnFragmentItemCollected.AddDynamic(this, &AArtifactAssembler::OnFragmentCollected);
+            Item->OnFragmentCollected.AddDynamic(this, &AArtifactAssembler::OnFragmentCollected);
         }
     }
  
@@ -57,7 +57,7 @@ void AArtifactAssembler::BeginPlay()
     }
 }
  
-void AArtifactAssembler::OnFragmentCollected(AFragmentItem* Item, FName FragmentID)
+void AArtifactAssembler::OnFragmentCollected(FName FragmentID)
 {
     CollectedFragments++;
     UE_LOG(LogTemp, Log, TEXT("[ArtifactAssembler] Fragmento '%s' recibido. %d / %d"),

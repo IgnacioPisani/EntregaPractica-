@@ -18,8 +18,8 @@ void ADamageItem::OnInteract(ACharacter* Character)
 	UGameplayStatics::ApplyDamage(
 		Character,
 		DamageAmount,
-		nullptr,        // Instigator Controller
-		this,           // Damage Causer
-		nullptr         // Damage Type
+		nullptr,        
+		this,           
+		nullptr         
 	);
 }

@@ -25,15 +25,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	// Notifica cuando se agrega un fragmento
 	UPROPERTY(BlueprintAssignable, Category = "Fragmentos")
 	FOnFragmentAdded OnFragmentAdded;
  
-	// Notifica cuando el artefacto esta completo
 	UPROPERTY(BlueprintAssignable, Category = "Fragmentos")
 	FOnArtifactComplete OnArtifactComplete;
  
-	// Agrega un fragmento por ID; retorna true si fue nuevo
 	UFUNCTION(BlueprintCallable, Category = "Fragmentos")
 	bool AddFragment(FName FragmentID);
  
@@ -46,7 +43,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Fragmentos")
 	bool IsArtifactComplete() const;
  
-	// Cantidad de fragmentos necesarios para completar el artefacto
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Fragmentos")
 	int32 RequiredFragments = 3;
  
@@ -54,7 +50,6 @@ public:
 	TArray<FName> GetCollectedFragments() const { return CollectedFragments; }
  
 protected:
-	// Lista de IDs de fragmentos ya recolectados
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Fragmentos")
 	TArray<FName> CollectedFragments;
 		

@@ -44,7 +44,7 @@ private:
 	FTimerHandle AssembleTimerHandle;
  
 	UFUNCTION()
-	void OnFragmentCollected(AFragmentItem* Item, FName FragmentID);
+	void OnFragmentCollected( FName FragmentID);
  
 	void CheckCompletion();
 	void SetReady();
