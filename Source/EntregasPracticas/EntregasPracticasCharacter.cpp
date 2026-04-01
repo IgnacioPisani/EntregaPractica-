@@ -12,7 +12,9 @@
 #include "InputActionValue.h"
 #include "EntregasPracticas.h"
 #include "FragmentComponent.h"
+#include "HealthModifier.h"
 #include "Interact.h"
+#include "Kismet/GameplayStatics.h"
 
 AEntregasPracticasCharacter::AEntregasPracticasCharacter()
 {
@@ -51,6 +53,25 @@ AEntregasPracticasCharacter::AEntregasPracticasCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+}
+
+void AEntregasPracticasCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	HealthModifier = Cast<AHealthModifier>(
+		UGameplayStatics::GetActorOfClass(GetWorld(), AHealthModifier::StaticClass())
+	);
+
+	if (HealthModifier)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HealthModifier encontrado"));
+		HealthModifier->OnHealthTick.AddDynamic(this, &AEntregasPracticasCharacter::HandleHealthTick);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No se encontro HealthModifier"));
+	}
 }
 
 void AEntregasPracticasCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -207,6 +228,20 @@ void AEntregasPracticasCharacter::ModifyHealth_Implementation(float Amount)
 	if (Health <= 0.f)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Personaje muerto"));
-		// Podés llamar a Die() acá
 	}
+}
+
+void AEntregasPracticasCharacter::HandleHealthTick(int32 TickCount)
+{
+	FString Message = FString::Printf(TEXT("Tick recibido: %d"), TickCount);
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			2.0f,
+			FColor::Green,
+			Message
+		);
+	}
+
 }

@@ -8,6 +8,7 @@
 #include "Logging/LogMacros.h"
 #include "EntregasPracticasCharacter.generated.h"
 
+class AHealthModifier;
 class UFragmentComponent;
 class USpringArmComponent;
 class UCameraComponent;
@@ -57,7 +58,8 @@ protected:
 public:
 
 	/** Constructor */
-	AEntregasPracticasCharacter();	
+	AEntregasPracticasCharacter();
+	void BeginPlay();
 
 protected:
 
@@ -98,7 +100,19 @@ public:
 		class AActor* DamageCauser
 	) override;
 
+private:
+	
+	UPROPERTY()
+	float Health = 100.f;
+
+	UPROPERTY()
+	float MaxHealth = 100.f;
+	
+	UPROPERTY()
+	AHealthModifier* HealthModifier;
 public:
+
+	virtual void ModifyHealth_Implementation(float Amount);
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -112,13 +126,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Interaccion")
 	float InteractionRadius = 200.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float Health = 100.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
-	float MaxHealth = 100.f;
-
-	virtual void ModifyHealth_Implementation(float Amount);
+	// Función que se va a bindear
+	UFUNCTION()
+	void HandleHealthTick(int32 TickCount);
 
 };
 

@@ -18,11 +18,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	// 🔹 Zona de efecto
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* TriggerZone;
 
-	// 🔹 Configuración
 	UPROPERTY(EditAnywhere, Category="Health")
 	float Amount = 10.f;
 
@@ -32,33 +30,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Health")
 	bool bIsHealing = false;
 
-	// 🔹 Timer
 	FTimerHandle EffectTimer;
 
-	// 🔹 Actor afectado
 	UPROPERTY()
 	AActor* AffectedActor;
 
-	// 🔹 Contador
 	int32 TickCounter = 0;
-
-	// 🔹 Eventos
-	UFUNCTION()
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex);
-
+	
 	void ApplyEffect();
 
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 public:
 
 	UPROPERTY(BlueprintAssignable)

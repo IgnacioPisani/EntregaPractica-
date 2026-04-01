@@ -1,6 +1,7 @@
 #include "HealthModifier.h"
 #include "TimerManager.h"
 #include "GameFramework/Actor.h"
+#include "HealthInterface.h"
 
 AHealthModifier::AHealthModifier()
 {
@@ -15,51 +16,7 @@ AHealthModifier::AHealthModifier()
 void AHealthModifier::BeginPlay()
 {
 	Super::BeginPlay();
-
-	TriggerZone->OnComponentBeginOverlap.AddDynamic(this, &AHealthModifier::OnOverlapBegin);
-	TriggerZone->OnComponentEndOverlap.AddDynamic(this, &AHealthModifier::OnOverlapEnd);
 }
-
-void AHealthModifier::OnOverlapBegin(
-	UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex,
-	bool bFromSweep,
-	const FHitResult& SweepResult)
-{
-	if (!OtherActor || OtherActor == this) return;
-
-	UE_LOG(LogTemp, Warning, TEXT("Actor entro a zona"));
-
-	AffectedActor = OtherActor;
-	TickCounter = 0;
-
-	GetWorld()->GetTimerManager().SetTimer(
-		EffectTimer,
-		this,
-		&AHealthModifier::ApplyEffect,
-		Interval,
-		true
-	);
-}
-
-void AHealthModifier::OnOverlapEnd(
-	UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor,
-	UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	if (OtherActor == AffectedActor)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Actor salio de zona"));
-
-		GetWorld()->GetTimerManager().ClearTimer(EffectTimer);
-		AffectedActor = nullptr;
-	}
-}
-
-#include "HealthInterface.h"
 
 void AHealthModifier::ApplyEffect()
 {
@@ -86,4 +43,35 @@ void AHealthModifier::ApplyEffect()
 	}
 
 	OnHealthTick.Broadcast(TickCounter);
+}
+
+void AHealthModifier::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	if (!OtherActor || OtherActor == this) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Actor entro a zona"));
+
+	AffectedActor = OtherActor;
+	TickCounter = 0;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		EffectTimer,
+		this,
+		&AHealthModifier::ApplyEffect,
+		Interval,
+		true
+	);
+}
+
+void AHealthModifier::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+	if (OtherActor == AffectedActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Actor salio de zona"));
+
+		GetWorld()->GetTimerManager().ClearTimer(EffectTimer);
+		AffectedActor = nullptr;
+	}
 }
