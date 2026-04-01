@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HealthInterface.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "EntregasPracticasCharacter.generated.h"
@@ -20,7 +21,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AEntregasPracticasCharacter : public ACharacter
+class AEntregasPracticasCharacter : public ACharacter, public IHealthInterface
 {
 	GENERATED_BODY()
 
@@ -113,5 +114,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float Health = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
+	float MaxHealth = 100.f;
+
+	virtual void ModifyHealth_Implementation(float Amount);
+
 };
 

@@ -186,3 +186,27 @@ AActor* DamageCauser)
 
 	return DamageAmount;
 }
+
+void AEntregasPracticasCharacter::ModifyHealth_Implementation(float Amount)
+{
+	float OldHealth = Health;
+
+	Health = FMath::Clamp(Health + Amount, 0.f, MaxHealth);
+
+	UE_LOG(LogTemp, Warning, TEXT("Health modificada: %f → %f"), OldHealth, Health);
+
+	if (Amount < 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Recibio daño"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Recibio curacion"));
+	}
+
+	if (Health <= 0.f)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Personaje muerto"));
+		// Podés llamar a Die() acá
+	}
+}
