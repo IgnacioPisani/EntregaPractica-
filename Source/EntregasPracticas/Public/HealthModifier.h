@@ -61,7 +61,6 @@ protected:
 
 public:
 
-	// 🔥 Evento para Blueprint
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthTick OnHealthTick;
 };

@@ -74,8 +74,7 @@ void AHealthModifier::ApplyEffect()
 		FinalAmount,
 		TickCounter);
 
-	// 🔥 Aplicar efecto usando la interfaz
-	if (AffectedActor->GetClass()->ImplementsInterface(UHealthInterface::StaticClass()))
+	if (AffectedActor->Implements<UHealthInterface>())
 	{
 		IHealthInterface::Execute_ModifyHealth(AffectedActor, FinalAmount);
 
@@ -86,6 +85,5 @@ void AHealthModifier::ApplyEffect()
 		UE_LOG(LogTemp, Error, TEXT("El actor no implementa HealthInterface"));
 	}
 
-	// 🔥 Evento para contar ticks
 	OnHealthTick.Broadcast(TickCounter);
 }
