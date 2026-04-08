@@ -12,9 +12,8 @@
 #include "InputActionValue.h"
 #include "EntregasPracticas.h"
 #include "FragmentComponent.h"
-#include "HealthModifier.h"
+#include "HealthComponent.h"
 #include "Interact.h"
-#include "Kismet/GameplayStatics.h"
 
 AEntregasPracticasCharacter::AEntregasPracticasCharacter()
 {
@@ -50,6 +49,8 @@ AEntregasPracticasCharacter::AEntregasPracticasCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 	FragmentComponent = CreateDefaultSubobject<UFragmentComponent>(TEXT("FragmentComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	bReplicates = true; 
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -58,20 +59,6 @@ AEntregasPracticasCharacter::AEntregasPracticasCharacter()
 void AEntregasPracticasCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	HealthModifier = Cast<AHealthModifier>(
-		UGameplayStatics::GetActorOfClass(GetWorld(), AHealthModifier::StaticClass())
-	);
-
-	if (HealthModifier)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("HealthModifier encontrado"));
-		HealthModifier->OnHealthTick.AddDynamic(this, &AEntregasPracticasCharacter::HandleHealthTick);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("No se encontro HealthModifier"));
-	}
 }
 
 void AEntregasPracticasCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -201,47 +188,10 @@ AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	Health -= DamageAmount;
+	HealthComponent->ModifyHealth(-DamageAmount);
 
-	UE_LOG(LogTemp, Warning, TEXT("Vida actual: %f"), Health);
+	UE_LOG(LogTemp, Warning, TEXT("Vida actual: %f"), HealthComponent->Health);
 
 	return DamageAmount;
 }
 
-void AEntregasPracticasCharacter::ModifyHealth_Implementation(float Amount)
-{
-	float OldHealth = Health;
-
-	Health = FMath::Clamp(Health + Amount, 0.f, MaxHealth);
-
-	UE_LOG(LogTemp, Warning, TEXT("Health modificada: %f → %f"), OldHealth, Health);
-
-	if (Amount < 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Recibio daño"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Recibio curacion"));
-	}
-
-	if (Health <= 0.f)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Personaje muerto"));
-	}
-}
-
-void AEntregasPracticasCharacter::HandleHealthTick(int32 TickCount)
-{
-	FString Message = FString::Printf(TEXT("Tick recibido: %d"), TickCount);
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,
-			2.0f,
-			FColor::Green,
-			Message
-		);
-	}
-
-}

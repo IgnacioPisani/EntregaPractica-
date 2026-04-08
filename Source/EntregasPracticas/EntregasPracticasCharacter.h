@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HealthInterface.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "EntregasPracticasCharacter.generated.h"
@@ -22,7 +21,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
  *  Implements a controllable orbiting camera
  */
 UCLASS(abstract)
-class AEntregasPracticasCharacter : public ACharacter, public IHealthInterface
+class AEntregasPracticasCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -100,20 +99,9 @@ public:
 		class AActor* DamageCauser
 	) override;
 
-private:
-	
-	UPROPERTY()
-	float Health = 100.f;
 
-	UPROPERTY()
-	float MaxHealth = 100.f;
-	
-	UPROPERTY()
-	AHealthModifier* HealthModifier;
 public:
-
-	virtual void ModifyHealth_Implementation(float Amount);
-
+	
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
@@ -127,8 +115,10 @@ public:
 	float InteractionRadius = 200.f;
 
 	// Función que se va a bindear
-	UFUNCTION()
-	void HandleHealthTick(int32 TickCount);
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UHealthComponent* HealthComponent;
+	
 };
 

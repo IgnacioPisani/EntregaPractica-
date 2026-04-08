@@ -1,7 +1,8 @@
 #include "HealthModifier.h"
+
+#include "HealthComponent.h"
 #include "TimerManager.h"
 #include "GameFramework/Actor.h"
-#include "HealthInterface.h"
 
 AHealthModifier::AHealthModifier()
 {
@@ -31,15 +32,15 @@ void AHealthModifier::ApplyEffect()
 		FinalAmount,
 		TickCounter);
 
-	if (AffectedActor->Implements<UHealthInterface>())
-	{
-		IHealthInterface::Execute_ModifyHealth(AffectedActor, FinalAmount);
+	UHealthComponent* HealthComp = AffectedActor->FindComponentByClass<UHealthComponent>();
 
-		UE_LOG(LogTemp, Warning, TEXT("ModifyHealth ejecutado correctamente"));
+	if (HealthComp)
+	{
+		HealthComp->ModifyHealth(FinalAmount);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("El actor no implementa HealthInterface"));
+		UE_LOG(LogTemp, Error, TEXT("El actor no tiene HealthComponent"));
 	}
 
 	OnHealthTick.Broadcast(TickCounter);
