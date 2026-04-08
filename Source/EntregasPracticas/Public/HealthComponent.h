@@ -7,7 +7,6 @@
 #include "HealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLifeChanged, float, Health, float, MaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ENTREGASPRACTICAS_API UHealthComponent : public UActorComponent
 {
@@ -24,14 +23,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MinHealth;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
-	bool bIsDeath;
-
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnLifeChanged OnLifeChanged;
-
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FOnDeath OnDeath;
 
 protected:
 	virtual void BeginPlay() override;

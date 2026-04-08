@@ -93,10 +93,7 @@ void ACharacterPlayerController::BindToCharacter()
 		this,
 		&ACharacterPlayerController::HandleLifeChanged
 	);
-
-	CharacterEntregasPracticas->HealthComponent->OnDeath.AddDynamic(this,
-		&ACharacterPlayerController::HandleDeath
-		);
+	
 
 	UE_LOG(LogTemp, Warning, TEXT("Bind a HealthComponent exitoso"));
 }

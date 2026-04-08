@@ -10,7 +10,6 @@ UHealthComponent::UHealthComponent()
 	Health = 100.f;
 	MaxHealth = 100.f;
 	MinHealth = 0.f;
-	bIsDeath = false;
 	SetIsReplicatedByDefault(true);
 }
 
@@ -28,7 +27,6 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 }
 void UHealthComponent::ModifyHealth(float Delta)
 {
-	if (bIsDeath) return;
 
 	float OldHealth = Health;
 
@@ -38,12 +36,7 @@ void UHealthComponent::ModifyHealth(float Delta)
 	{
 		OnLifeChanged.Broadcast(Health, MaxHealth);
 	}
-
-	if (Health <= MinHealth && !bIsDeath)
-	{
-		bIsDeath = true;
-		OnDeath.Broadcast();
-	}
+	
 }
 
 void UHealthComponent::OnRep_Health()
